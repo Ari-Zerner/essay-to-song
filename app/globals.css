@@ -215,6 +215,38 @@ body {
   margin-left: 0.5rem;
 }
 
+/* API Key Input Styles */
+.api-key-input {
+  font-family: 'SF Mono', Monaco, 'Cascadia Code', 'Roboto Mono', Consolas, 'Courier New', monospace;
+  background-color: #f8fafc;
+  border: 2px solid #fbbf24;
+}
+
+.api-key-input:focus {
+  border-color: #f59e0b;
+  box-shadow: 0 0 0 3px rgba(245, 158, 11, 0.1);
+}
+
+.api-key-help {
+  margin-top: 0.5rem;
+}
+
+.api-key-help small {
+  color: #6b7280;
+  display: flex;
+  align-items: center;
+  gap: 0.25rem;
+}
+
+.api-key-help a {
+  color: #667eea;
+  text-decoration: none;
+}
+
+.api-key-help a:hover {
+  text-decoration: underline;
+}
+
 .button-group {
   display: flex;
   gap: 1rem;

@@ -1,6 +1,6 @@
 'use client'
 
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 
 interface ConversionResult {
   stylePrompt: string
@@ -23,11 +23,31 @@ export default function Home() {
   const [isLoading, setIsLoading] = useState(false)
   const [error, setError] = useState('')
   
+  // API key state
+  const [apiKey, setApiKey] = useState('')
+  const [needsApiKey, setNeedsApiKey] = useState(false)
+  
   // Refinement mode state
   const [isRefinementMode, setIsRefinementMode] = useState(false)
   const [refinementInstructions, setRefinementInstructions] = useState('')
   const [versions, setVersions] = useState<Version[]>([])
   const [currentVersionIndex, setCurrentVersionIndex] = useState(-1)
+
+  // Check if API key is available on page load
+  useEffect(() => {
+    const checkApiKey = async () => {
+      try {
+        const response = await fetch('/api/check-api-key')
+        const data = await response.json()
+        setNeedsApiKey(!data.hasApiKey)
+      } catch (error) {
+        // If check fails, assume we need an API key
+        setNeedsApiKey(true)
+      }
+    }
+    
+    checkApiKey()
+  }, [])
 
   const handleFileUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0]
@@ -58,6 +78,11 @@ export default function Home() {
       setError('No existing content to refine. Switch to "New Conversion" mode.')
       return
     }
+    
+    if (needsApiKey && !apiKey.trim()) {
+      setError('Please enter your Anthropic API key.')
+      return
+    }
 
     setIsLoading(true)
     setError('')
@@ -78,11 +103,17 @@ export default function Home() {
           refinementInstructions: refinementInstructions.trim(),
           currentStylePrompt: isRefinementMode ? stylePrompt : '',
           currentLyrics: isRefinementMode ? lyrics : '',
+          apiKey: apiKey.trim() || undefined,
         }),
       })
 
       if (!response.ok) {
         const errorData = await response.json()
+        // Check if we need an API key
+        if (response.status === 401 && errorData.needsApiKey) {
+          setNeedsApiKey(true)
+          throw new Error('Please provide your Anthropic API key')
+        }
         throw new Error(errorData.error || 'Failed to convert essay')
       }
 
@@ -144,6 +175,33 @@ export default function Home() {
         {error && (
           <div className="error">
             {error}
+          </div>
+        )}
+        
+        {/* API Key Input - only show if needed */}
+        {needsApiKey && (
+          <div className="form-group">
+            <label htmlFor="apiKey">
+              Anthropic API Key *
+            </label>
+            <input
+              id="apiKey"
+              type="password"
+              value={apiKey}
+              onChange={(e) => setApiKey(e.target.value)}
+              placeholder="Enter your Anthropic API key..."
+              className="api-key-input"
+              disabled={isLoading}
+              required
+            />
+            <div className="api-key-help">
+              <small>
+                🔒 Your API key is sent securely and not stored. Get your key from{' '}
+                <a href="https://console.anthropic.com/" target="_blank" rel="noopener noreferrer">
+                  console.anthropic.com
+                </a>
+              </small>
+            </div>
           </div>
         )}
         

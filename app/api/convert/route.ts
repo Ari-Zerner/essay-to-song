@@ -3,9 +3,7 @@ import Anthropic from '@anthropic-ai/sdk'
 import { readFile } from 'fs/promises'
 import { join } from 'path'
 
-const anthropic = new Anthropic({
-  apiKey: process.env.ANTHROPIC_API_KEY,
-})
+// We'll create the Anthropic client in the handler with the appropriate key
 
 async function loadSystemPrompt(): Promise<string> {
   try {
@@ -20,7 +18,7 @@ async function loadSystemPrompt(): Promise<string> {
 
 export async function POST(request: NextRequest) {
   try {
-    const { genreHints, userNotes, essayText, isRefinementMode, refinementInstructions, currentStylePrompt, currentLyrics } = await request.json()
+    const { genreHints, userNotes, essayText, isRefinementMode, refinementInstructions, currentStylePrompt, currentLyrics, apiKey } = await request.json()
 
     if (!essayText || typeof essayText !== 'string') {
       return NextResponse.json(
@@ -29,14 +27,30 @@ export async function POST(request: NextRequest) {
       )
     }
 
-    if (!process.env.ANTHROPIC_API_KEY) {
+    // Check for API key in environment or request
+    const anthropicApiKey = process.env.ANTHROPIC_API_KEY || apiKey
+    
+    if (!anthropicApiKey) {
       return NextResponse.json(
-        { error: 'Anthropic API key not configured' },
-        { status: 500 }
+        { error: 'Anthropic API key required', needsApiKey: true },
+        { status: 401 }
+      )
+    }
+    
+    // Basic API key validation
+    if (apiKey && (!apiKey.startsWith('sk-ant-') || apiKey.length < 50)) {
+      return NextResponse.json(
+        { error: 'Invalid API key format', needsApiKey: true },
+        { status: 401 }
       )
     }
 
     const systemPrompt = await loadSystemPrompt()
+
+    // Create Anthropic client with the appropriate API key
+    const anthropic = new Anthropic({
+      apiKey: anthropicApiKey,
+    })
 
     // Construct the user message in XML format
     let userMessage = ''
@@ -107,11 +121,22 @@ export async function POST(request: NextRequest) {
   } catch (error) {
     console.error('Error converting essay:', error)
     
-    if (error instanceof Error && error.message.includes('API key')) {
-      return NextResponse.json(
-        { error: 'Invalid API key. Please check your Anthropic API configuration.' },
-        { status: 401 }
-      )
+    if (error instanceof Error) {
+      // Handle API key related errors
+      if (error.message.includes('API key') || error.message.includes('authentication')) {
+        return NextResponse.json(
+          { error: 'Invalid API key. Please check your Anthropic API key.', needsApiKey: true },
+          { status: 401 }
+        )
+      }
+      
+      // Handle rate limiting
+      if (error.message.includes('rate limit')) {
+        return NextResponse.json(
+          { error: 'Rate limit exceeded. Please try again in a moment.' },
+          { status: 429 }
+        )
+      }
     }
 
     return NextResponse.json(
