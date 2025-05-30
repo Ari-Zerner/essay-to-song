@@ -20,7 +20,7 @@ async function loadSystemPrompt(): Promise<string> {
 
 export async function POST(request: NextRequest) {
   try {
-    const { genreHints, userNotes, essayText } = await request.json()
+    const { genreHints, userNotes, essayText, isRefinementMode, refinementInstructions, currentStylePrompt, currentLyrics } = await request.json()
 
     if (!essayText || typeof essayText !== 'string') {
       return NextResponse.json(
@@ -39,11 +39,22 @@ export async function POST(request: NextRequest) {
     const systemPrompt = await loadSystemPrompt()
 
     // Construct the user message in XML format
-    const userMessage = `<conversion_request>
+    let userMessage = ''
+    
+    if (isRefinementMode) {
+      userMessage = `<refinement_request>
+<refinement_instructions>${refinementInstructions}</refinement_instructions>
+<current_style_prompt>${currentStylePrompt || ''}</current_style_prompt>
+<current_lyrics>${currentLyrics || ''}</current_lyrics>
+<original_essay_text>${essayText}</original_essay_text>
+</refinement_request>`
+    } else {
+      userMessage = `<conversion_request>
 <essay_text>${essayText}</essay_text>
 <genre_hints>${genreHints?.trim() || ''}</genre_hints>
 <user_notes>${userNotes?.trim() || ''}</user_notes>
 </conversion_request>`
+    }
 
     const message = await anthropic.messages.create({
       model: 'claude-sonnet-4-20250514',
