@@ -75,7 +75,7 @@ export default function Home() {
     <div className="container">
       <header className="header">
         <h1>🎵 Essay to Song</h1>
-        <p>Transform your essays into beautiful songs with AI</p>
+        <p>Transform essays into ready-to-use Suno prompts</p>
       </header>
 
       <form onSubmit={handleSubmit} className="form-container">
