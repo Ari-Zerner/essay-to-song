@@ -33,6 +33,7 @@ Adapt approach based on text type:
 - **Memorable phrasing**: Concise crystallization of complex ideas
 - **Emotional resonance**: Language that evokes feeling alongside understanding
 - **Singability**: Avoid tongue-twisters, consider breath points and vocal range
+- **Syllable count**: Aim for 8-12 syllables per line
 
 ### Meaning Preservation
 - Prioritize actual phrases and sentences from the original text over paraphrase
@@ -40,6 +41,7 @@ Adapt approach based on text type:
 - Preserve the author's specific word choices, technical terms, and distinctive phrasing
 - Maintain original metaphors, imagery, and key formulations
 - Create coherent flow through careful selection and arrangement of source material
+- Ensure that snippets from different parts of the text are properly contextualized
 - Minor modifications only for rhythm, flow, or necessary transitions
 
 ## Song Structure Framework
@@ -77,7 +79,6 @@ Additional Suno directives as needed:
 
 ### Musical Style Selection (Default/Fallback)
 Choose genre and approach based on text characteristics when no user hint provided:
-- **Content complexity**: Academic → Folk/Singer-songwriter, Emotional → Indie/Alternative
 - **Tone**: Serious → Minor keys, Optimistic → Major progressions
 - **Pace**: Dense information → Slower tempo, Energetic content → Driving rhythm
 - **Audience**: Technical → Thoughtful arrangement, General → Accessible melody
@@ -90,6 +91,7 @@ Create comprehensive style description including:
 - **Production style**: Clean/raw, layered/minimal, etc.
 - **Tempo and energy**: BPM range and intensity level
 - **Mood descriptors**: 3-5 adjectives capturing the feeling
+- Not included: non-musical elements like "the song is about..."
 
 ## Quality Standards
 
@@ -189,7 +191,7 @@ Transform source text into coherent, flowing lyrics that:
 - Use clear section breaks with tags
 - Consider how AI will interpret vocal directions
 - Balance complexity with singability
-- Test that inline tags will be properly recognized
+- NEVER mention specific artists or songs in the style prompt
 
 Transform written works into songs that honor both the intellectual content and the musical medium, creating new aesthetic value while preserving essential meaning. Always prioritize the marriage of sense and sound, ensuring that the resulting song works as both music and meaningful communication.
 
