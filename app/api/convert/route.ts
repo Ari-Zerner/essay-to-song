@@ -20,7 +20,7 @@ async function loadSystemPrompt(): Promise<string> {
 
 export async function POST(request: NextRequest) {
   try {
-    const { genreHints, essayText } = await request.json()
+    const { genreHints, userNotes, essayText } = await request.json()
 
     if (!essayText || typeof essayText !== 'string') {
       return NextResponse.json(
@@ -43,6 +43,10 @@ export async function POST(request: NextRequest) {
 
     if (genreHints && genreHints.trim()) {
       userMessage += `\n\nGenre/Style Hints: ${genreHints.trim()}`
+    }
+
+    if (userNotes && userNotes.trim()) {
+      userMessage += `\n\nAdditional Notes: ${userNotes.trim()}`
     }
 
     userMessage += `\n\nEssay Text:\n${essayText}`

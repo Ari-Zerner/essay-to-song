@@ -9,10 +9,23 @@ interface ConversionResult {
 
 export default function Home() {
   const [genreHints, setGenreHints] = useState('')
+  const [userNotes, setUserNotes] = useState('')
   const [essayText, setEssayText] = useState('')
   const [output, setOutput] = useState('')
   const [isLoading, setIsLoading] = useState(false)
   const [error, setError] = useState('')
+
+  const handleFileUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0]
+    if (file) {
+      const reader = new FileReader()
+      reader.onload = (event) => {
+        const text = event.target?.result as string
+        setEssayText(text)
+      }
+      reader.readAsText(file)
+    }
+  }
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
@@ -34,6 +47,7 @@ export default function Home() {
         },
         body: JSON.stringify({
           genreHints: genreHints.trim(),
+          userNotes: userNotes.trim(),
           essayText: essayText.trim(),
         }),
       })
@@ -85,9 +99,37 @@ export default function Home() {
         </div>
 
         <div className="form-group">
+          <label htmlFor="userNotes">
+            Additional Notes (optional)
+          </label>
+          <textarea
+            id="userNotes"
+            value={userNotes}
+            onChange={(e) => setUserNotes(e.target.value)}
+            placeholder="Any specific instructions, mood, or style preferences..."
+            className="user-notes-input"
+            disabled={isLoading}
+          />
+        </div>
+
+        <div className="form-group">
           <label htmlFor="essayText">
             Essay Text *
           </label>
+          <div className="file-upload-section">
+            <input
+              type="file"
+              id="fileUpload"
+              accept=".txt,.md,.doc,.docx"
+              onChange={handleFileUpload}
+              disabled={isLoading}
+              className="file-input"
+            />
+            <label htmlFor="fileUpload" className="file-upload-button">
+              📁 Upload File
+            </label>
+            <span className="file-upload-text">or paste text below</span>
+          </div>
           <textarea
             id="essayText"
             value={essayText}
