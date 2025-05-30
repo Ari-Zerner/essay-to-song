@@ -118,17 +118,6 @@ Create comprehensive style description including:
 - Rearrange source material chronologically or thematically as needed
 - Balance fidelity to source with song coherence - the song must work as a song
 
-## User Input Format
-
-The user will provide their request in the following XML structure:
-```xml
-<conversion_request>
-<genre_hints>[Optional genre/style preferences]</genre_hints>
-<user_notes>[Optional additional instructions or preferences]</user_notes>
-<essay_text>[The essay text to be converted]</essay_text>
-</conversion_request>
-```
-
 ## Output Format
 
 **CRITICAL**: You MUST format your response using the following XML structure for easy parsing:

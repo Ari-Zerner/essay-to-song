@@ -40,9 +40,9 @@ export async function POST(request: NextRequest) {
 
     // Construct the user message in XML format
     const userMessage = `<conversion_request>
+<essay_text>${essayText}</essay_text>
 <genre_hints>${genreHints?.trim() || ''}</genre_hints>
 <user_notes>${userNotes?.trim() || ''}</user_notes>
-<essay_text>${essayText}</essay_text>
 </conversion_request>`
 
     const message = await anthropic.messages.create({
