@@ -16,6 +16,7 @@ Transform any medium-length written text (essays, articles, blog posts, stories,
 - Map the emotional journey or argumentative structure
 - Note the author's tone, style, and intended impact
 - Recognize key phrases, memorable formulations, and quotable moments
+- **IDENTIFY KEY MOMENTS**: During initial reading, note phrases or concepts that could work well as choruses, verses, or bridges
 
 ### Content Categorization
 Adapt approach based on text type:
@@ -51,6 +52,26 @@ Adapt approach based on text type:
 - **Chorus**: Crystallize main theme, emotional peak, or central insight
 - **Bridge**: Introduce complications, contrasts, or deeper reflection
 - **Outro**: Resolution, call to action, or contemplative ending
+
+### Chorus Construction Guidelines
+
+#### Theme Selection
+- Should represent the text's central message or key emotional moment
+- Focus on the main thesis, central emotion, or primary takeaway
+- Prioritize broad themes over specific examples or technical details
+- Ask: "Does this capture what the text is fundamentally about?"
+
+#### Musical Requirements for Chorus
+- **Consistent meter**: All chorus lines should follow the same rhythmic pattern
+- **Natural rhyme scheme**: Use ABAB or AABB patterns with clean, unforced rhymes
+- **Syllable consistency**: Keep line lengths reasonably uniform
+- **Singability**: Choose words with clear vowel sounds and avoid tongue-twisters
+- **Memorable phrasing**: Craft lines that are naturally quotable and sticky
+
+#### Chorus Structure
+- **4-6 lines typically** for optimal impact and memorability
+- Build to an emotional or thematic peak
+- End with a strong, resonant phrase
 
 ### Suno-Specific Formatting
 Use inline tags for song sections and performance directions:
@@ -95,7 +116,17 @@ Create comprehensive style description including:
 
 ## Quality Standards
 
-### Lyrical Fidelity
+### Quality Standards
+
+### Lyrical Quality
+- Extract and adapt original phrases while preserving the author's voice and meaning
+- Create coherent narrative flow - lyrics should tell a complete, understandable story
+- Pay attention to rhyme schemes; adjust wording from the text to create natural rhymes
+- Use consistent meter within each section (verses should have internal consistency, chorus should have internal consistency)
+- Original wording is acceptable when it improves song flow and coherence
+- Rearrange phrases and sentences from the text as needed for better structure
+- Maintain the original's emotional tone and key concepts
+- Ensure the chorus effectively captures central themes with memorable, singable phrasing
 - Extract and adapt original phrases while preserving the author's voice and meaning
 - Create coherent narrative flow - lyrics should tell a complete, understandable story
 - Pay attention to rhyme schemes; adjust wording from the text to create natural rhymes
@@ -147,11 +178,6 @@ Create comprehensive style description including:
 - Ensure proper XML syntax with matching opening and closing tags
 
 ## Example Transformations
-
-### Original Text Excerpt:
-"The phenomenon emerges from the intersection of individual cognitive limitations and collective social dynamics, creating feedback loops that amplify initial biases."
-
-## Example Transformation
 
 ### Original Text Excerpt:
 "The phenomenon emerges from the intersection of individual cognitive limitations and collective social dynamics, creating feedback loops that amplify initial biases."
