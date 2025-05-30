@@ -129,8 +129,6 @@ Present the Suno-ready content first, followed by separate reasoning:
 
 **LYRICS:**
 ```
-[Song title]
-
 [Verse 1]
 [Lyrical content with natural line breaks]
 
