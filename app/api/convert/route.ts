@@ -38,18 +38,12 @@ export async function POST(request: NextRequest) {
 
     const systemPrompt = await loadSystemPrompt()
 
-    // Construct the user message
-    let userMessage = `Please convert the following essay into a song:`
-
-    if (genreHints && genreHints.trim()) {
-      userMessage += `\n\nGenre/Style Hints: ${genreHints.trim()}`
-    }
-
-    if (userNotes && userNotes.trim()) {
-      userMessage += `\n\nAdditional Notes: ${userNotes.trim()}`
-    }
-
-    userMessage += `\n\nEssay Text:\n${essayText}`
+    // Construct the user message in XML format
+    const userMessage = `<conversion_request>
+<genre_hints>${genreHints?.trim() || ''}</genre_hints>
+<user_notes>${userNotes?.trim() || ''}</user_notes>
+<essay_text>${essayText}</essay_text>
+</conversion_request>`
 
     const message = await anthropic.messages.create({
       model: 'claude-sonnet-4-20250514',
@@ -67,32 +61,36 @@ export async function POST(request: NextRequest) {
       ? message.content[0].text 
       : 'Unable to process response'
 
-    // Try to parse the response to extract style prompt and lyrics
-    // Using [\s\S]* instead of the /s flag for cross-line matching
-    const stylePromptMatch = responseText.match(/\*\*STYLE PROMPT:\*\*\s*```([^`]+)```/) ||
-                            responseText.match(/STYLE PROMPT:\s*```([^`]+)```/) ||
-                            responseText.match(/\*\*STYLE PROMPT:\*\*\s*([^\n]+(?:\n(?![\*\#])[^\n]*)*)/) ||
-                            responseText.match(/STYLE PROMPT:\s*([^\n]+(?:\n(?![\*\#])[^\n]*)*)/)
-
-    const lyricsMatch = responseText.match(/\*\*LYRICS:\*\*\s*```([^`]+)```/) ||
-                       responseText.match(/LYRICS:\s*```([^`]+)```/) ||
-                       responseText.match(/\*\*LYRICS:\*\*\s*([^\n]+(?:\n(?![\*\#])[^\n]*)*)/) ||
-                       responseText.match(/LYRICS:\s*([^\n]+(?:\n(?![\*\#])[^\n]*)*)/)
-
-    const stylePrompt = stylePromptMatch ? stylePromptMatch[1].trim() : ''
-    const lyrics = lyricsMatch ? lyricsMatch[1].trim() : ''
-
-    // If we couldn't parse properly, return the full response
-    if (!stylePrompt && !lyrics) {
+    // Parse XML response
+    let stylePrompt = ''
+    let lyrics = ''
+    
+    try {
+      // Extract content between XML tags
+      const stylePromptMatch = responseText.match(/<style_prompt>([\s\S]*?)<\/style_prompt>/)
+      const lyricsMatch = responseText.match(/<lyrics>([\s\S]*?)<\/lyrics>/)
+      
+      stylePrompt = stylePromptMatch ? stylePromptMatch[1].trim() : ''
+      lyrics = lyricsMatch ? lyricsMatch[1].trim() : ''
+      
+      // If we couldn't parse XML properly, try to extract from full response
+      if (!stylePrompt && !lyrics) {
+        return NextResponse.json({
+          stylePrompt: 'Could not parse XML response',
+          lyrics: responseText,
+        })
+      }
+    } catch (parseError) {
+      console.error('Error parsing XML response:', parseError)
       return NextResponse.json({
-        stylePrompt: 'See full response below',
+        stylePrompt: 'XML parsing error',
         lyrics: responseText,
       })
     }
 
     return NextResponse.json({
       stylePrompt: stylePrompt || 'No style prompt found',
-      lyrics: lyrics || responseText,
+      lyrics: lyrics || 'No lyrics found',
     })
 
   } catch (error) {

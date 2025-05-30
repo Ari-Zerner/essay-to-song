@@ -11,7 +11,8 @@ export default function Home() {
   const [genreHints, setGenreHints] = useState('')
   const [userNotes, setUserNotes] = useState('')
   const [essayText, setEssayText] = useState('')
-  const [output, setOutput] = useState('')
+  const [stylePrompt, setStylePrompt] = useState('')
+  const [lyrics, setLyrics] = useState('')
   const [isLoading, setIsLoading] = useState(false)
   const [error, setError] = useState('')
 
@@ -37,7 +38,8 @@ export default function Home() {
 
     setIsLoading(true)
     setError('')
-    setOutput('')
+    setStylePrompt('')
+    setLyrics('')
 
     try {
       const response = await fetch('/api/convert', {
@@ -59,9 +61,8 @@ export default function Home() {
 
       const result: ConversionResult = await response.json()
       
-      // Format the output nicely
-      const formattedOutput = `STYLE PROMPT:\n${result.stylePrompt}\n\nLYRICS:\n${result.lyrics}`
-      setOutput(formattedOutput)
+      setStylePrompt(result.stylePrompt)
+      setLyrics(result.lyrics)
       
     } catch (err) {
       setError(err instanceof Error ? err.message : 'An unexpected error occurred')
@@ -157,18 +158,51 @@ export default function Home() {
         </button>
       </form>
 
-      {output && (
+      {(stylePrompt || lyrics) && (
         <div className="form-container">
           <div className="form-group">
-            <label htmlFor="output">
-              Generated Song (Ready for Suno)
-            </label>
+            <div className="output-header">
+              <label htmlFor="stylePromptOutput">
+                Style Prompt (for Suno)
+              </label>
+              <button
+                type="button"
+                className="copy-button"
+                onClick={() => navigator.clipboard.writeText(stylePrompt)}
+                disabled={!stylePrompt}
+              >
+                📋 Copy
+              </button>
+            </div>
             <textarea
-              id="output"
-              value={output}
+              id="stylePromptOutput"
+              value={stylePrompt}
               readOnly
-              className="output-area"
-              placeholder="Your converted song will appear here..."
+              className="output-area style-output"
+              placeholder="Style prompt will appear here..."
+            />
+          </div>
+          
+          <div className="form-group">
+            <div className="output-header">
+              <label htmlFor="lyricsOutput">
+                Lyrics (for Suno)
+              </label>
+              <button
+                type="button"
+                className="copy-button"
+                onClick={() => navigator.clipboard.writeText(lyrics)}
+                disabled={!lyrics}
+              >
+                📋 Copy
+              </button>
+            </div>
+            <textarea
+              id="lyricsOutput"
+              value={lyrics}
+              readOnly
+              className="output-area lyrics-output"
+              placeholder="Lyrics will appear here..."
             />
           </div>
         </div>
