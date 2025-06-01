@@ -41,6 +41,106 @@ body {
   opacity: 0.9;
 }
 
+/* Instructions Section Styles */
+.instructions-section {
+  margin-top: 2rem;
+  text-align: left;
+}
+
+.instructions-toggle {
+  background: rgba(255, 255, 255, 0.2);
+  color: white;
+  border: 2px solid rgba(255, 255, 255, 0.3);
+  padding: 0.75rem 1.5rem;
+  border-radius: 8px;
+  font-size: 1rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  backdrop-filter: blur(10px);
+}
+
+.instructions-toggle:hover {
+  background: rgba(255, 255, 255, 0.3);
+  border-color: rgba(255, 255, 255, 0.5);
+}
+
+.instructions-content {
+  background: white;
+  border-radius: 12px;
+  padding: 2rem;
+  margin-top: 1rem;
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+  color: #374151;
+}
+
+.instructions-content h3 {
+  color: #1f2937;
+  margin-bottom: 1.5rem;
+  font-size: 1.3rem;
+  font-weight: 600;
+}
+
+.instruction-step {
+  margin-bottom: 1.5rem;
+  padding: 1rem;
+  background: #f8fafc;
+  border-radius: 8px;
+  border-left: 4px solid #667eea;
+}
+
+.instruction-step strong {
+  color: #667eea;
+  font-weight: 600;
+}
+
+.instruction-step ul {
+  margin-top: 0.5rem;
+  margin-left: 1rem;
+}
+
+.instruction-step li {
+  margin-bottom: 0.3rem;
+  line-height: 1.5;
+}
+
+.instruction-step a {
+  color: #667eea;
+  text-decoration: none;
+  font-weight: 500;
+}
+
+.instruction-step a:hover {
+  text-decoration: underline;
+}
+
+.pro-tips {
+  background: linear-gradient(135deg, #fef3c7 0%, #fde68a 100%);
+  padding: 1.5rem;
+  border-radius: 8px;
+  margin-top: 1rem;
+}
+
+.pro-tips h4 {
+  color: #92400e;
+  margin-bottom: 1rem;
+  font-weight: 600;
+}
+
+.pro-tips ul {
+  margin-left: 1rem;
+}
+
+.pro-tips li {
+  margin-bottom: 0.5rem;
+  line-height: 1.5;
+  color: #78350f;
+}
+
+.pro-tips strong {
+  color: #92400e;
+}
+
 .form-container {
   background: white;
   border-radius: 16px;
@@ -422,5 +522,17 @@ body {
   
   .version-controls {
     justify-content: center;
+  }
+  
+  .instructions-content {
+    padding: 1.5rem;
+  }
+  
+  .instruction-step {
+    padding: 0.75rem;
+  }
+  
+  .pro-tips {
+    padding: 1rem;
   }
 }

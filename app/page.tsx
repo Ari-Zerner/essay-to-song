@@ -32,6 +32,9 @@ export default function Home() {
   const [refinementInstructions, setRefinementInstructions] = useState('')
   const [versions, setVersions] = useState<Version[]>([])
   const [currentVersionIndex, setCurrentVersionIndex] = useState(-1)
+  
+  // Instructions visibility state
+  const [showInstructions, setShowInstructions] = useState(false)
 
   // Check if API key is available on page load
   useEffect(() => {
@@ -169,6 +172,68 @@ export default function Home() {
       <header className="header">
         <h1>🎵 Agendrify</h1>
         <p>Transform essays into ready-to-use Suno prompts</p>
+        
+        {/* Instructions Section */}
+        <div className="instructions-section">
+          <button
+            type="button"
+            className="instructions-toggle"
+            onClick={() => setShowInstructions(!showInstructions)}
+          >
+            {showInstructions ? '🔽' : '▶️'} How to use with Suno v4.5
+          </button>
+          
+          {showInstructions && (
+            <div className="instructions-content">
+              <h3>📝 How to use Agendrify</h3>
+              
+              <div className="instruction-step">
+                <strong>Step 1:</strong> Convert your essay using Agendrify
+                <ul>
+                  <li>Paste your essay text in the form above</li>
+                  <li>Optionally add genre hints for musical style</li>
+                  <li>Click &quot;Convert to Song&quot; and wait for the output</li>
+                </ul>
+              </div>
+              
+              <div className="instruction-step">
+                <strong>Step 2:</strong> Open Suno v4.5 in Custom Mode
+                <ul>
+                  <li>Go to <a href="https://suno.com" target="_blank" rel="noopener noreferrer">suno.com</a></li>
+                  <li>Click &quot;Create&quot; then select &quot;Custom&quot; mode</li>
+                  <li>Make sure you&apos;re using Suno v4.5 for best results (requires pro account)</li>
+                </ul>
+              </div>
+              
+              <div className="instruction-step">
+                <strong>Step 3:</strong> Copy the Style Prompt
+                <ul>
+                  <li>Use the &quot;Copy&quot; button next to &quot;Style Prompt&quot;</li>
+                  <li>Paste into Suno&apos;s &quot;Style of Music&quot; field</li>
+                  <li>This tells Suno what genre and mood to use</li>
+                </ul>
+              </div>
+              
+              <div className="instruction-step">
+                <strong>Step 4:</strong> Copy the Lyrics
+                <ul>
+                  <li>Use the &quot;Copy&quot; button next to &quot;Lyrics&quot;</li>
+                  <li>Paste into Suno&apos;s &quot;Lyrics&quot; field</li>
+                  <li>The lyrics are already formatted with [Verse], [Chorus] tags</li>
+                </ul>
+              </div>
+              
+              <div className="instruction-step">
+                <strong>Step 5:</strong> Generate your song
+                <ul>
+                  <li>Review the style and lyrics in Suno</li>
+                  <li>Click &quot;Create&quot; to generate your song</li>
+                  <li>Suno will create multiple versions - pick your favorite!</li>
+                </ul>
+              </div>
+            </div>
+          )}
+        </div>
       </header>
 
       <form onSubmit={handleSubmit} className="form-container">
