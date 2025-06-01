@@ -167,7 +167,7 @@ export default function Home() {
   return (
     <div className="container">
       <header className="header">
-        <h1>🎵 Essay to Song</h1>
+        <h1>🎵 Agendrify</h1>
         <p>Transform essays into ready-to-use Suno prompts</p>
       </header>
 
