@@ -223,6 +223,63 @@ body {
   font-size: 0.9rem;
 }
 
+/* URL Fetch Section Styles */
+.url-fetch-section {
+  margin-bottom: 1rem;
+}
+
+.url-input-group {
+  display: flex;
+  gap: 0.5rem;
+  margin-bottom: 0.5rem;
+  align-items: stretch;
+}
+
+.url-input {
+  flex: 1;
+  padding: 0.75rem;
+  border: 2px solid #e5e7eb;
+  border-radius: 8px;
+  font-size: 1rem;
+  transition: border-color 0.2s ease, box-shadow 0.2s ease;
+  font-family: inherit;
+}
+
+.url-input:focus {
+  outline: none;
+  border-color: #667eea;
+  box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+}
+
+.url-input:disabled {
+  background-color: #f9fafb;
+  cursor: not-allowed;
+}
+
+.url-fetch-button {
+  background: linear-gradient(135deg, #10b981 0%, #059669 100%);
+  color: white;
+  border: none;
+  padding: 0.75rem 1.5rem;
+  border-radius: 8px;
+  font-size: 0.9rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+  white-space: nowrap;
+}
+
+.url-fetch-button:hover:not(:disabled) {
+  transform: translateY(-1px);
+  box-shadow: 0 4px 12px rgba(16, 185, 129, 0.3);
+}
+
+.url-fetch-button:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+  transform: none;
+}
+
 .output-area {
   min-height: 300px;
   resize: vertical;
@@ -534,5 +591,15 @@ body {
   
   .pro-tips {
     padding: 1rem;
+  }
+  
+  .url-input-group {
+    flex-direction: column;
+    gap: 0.75rem;
+  }
+  
+  .url-fetch-button {
+    padding: 1rem;
+    width: 100%;
   }
 }

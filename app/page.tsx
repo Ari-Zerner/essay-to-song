@@ -35,6 +35,10 @@ export default function Home() {
   
   // Instructions visibility state
   const [showInstructions, setShowInstructions] = useState(false)
+  
+  // URL fetch state
+  const [urlInput, setUrlInput] = useState('')
+  const [isUrlLoading, setIsUrlLoading] = useState(false)
 
   // Check if API key is available on page load
   useEffect(() => {
@@ -61,6 +65,42 @@ export default function Home() {
         setEssayText(text)
       }
       reader.readAsText(file)
+    }
+  }
+
+  const handleUrlFetch = async () => {
+    if (!urlInput.trim()) {
+      setError('Please enter a URL to fetch text from.')
+      return
+    }
+
+    setIsUrlLoading(true)
+    setError('')
+
+    try {
+      const response = await fetch('/api/fetch-text', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          url: urlInput.trim(),
+        }),
+      })
+
+      if (!response.ok) {
+        const errorData = await response.json()
+        throw new Error(errorData.error || 'Failed to fetch text from URL')
+      }
+
+      const result = await response.json()
+      setEssayText(result.text)
+      setUrlInput('')
+      
+    } catch (err) {
+      setError(err instanceof Error ? err.message : 'An unexpected error occurred while fetching the URL')
+    } finally {
+      setIsUrlLoading(false)
     }
   }
 
@@ -190,7 +230,7 @@ export default function Home() {
               <div className="instruction-step">
                 <strong>Step 1:</strong> Convert your essay using Agendrify
                 <ul>
-                  <li>Paste your essay text in the form above</li>
+                  <li>Upload a file, paste a URL, or paste your essay text</li>
                   <li>Optionally add genre hints for musical style</li>
                   <li>Click &quot;Convert to Song&quot; and wait for the output</li>
                 </ul>
@@ -357,12 +397,41 @@ export default function Home() {
               id="fileUpload"
               accept=".txt,.md,.doc,.docx"
               onChange={handleFileUpload}
-              disabled={isLoading}
+              disabled={isLoading || isUrlLoading}
               className="file-input"
             />
             <label htmlFor="fileUpload" className="file-upload-button">
               📁 Upload File
             </label>
+            <span className="file-upload-text">or</span>
+          </div>
+          
+          <div className="url-fetch-section">
+            <div className="url-input-group">
+              <input
+                type="url"
+                value={urlInput}
+                onChange={(e) => setUrlInput(e.target.value)}
+                placeholder="Enter URL to fetch text from (e.g., blog post, article)..."
+                className="url-input"
+                disabled={isLoading || isUrlLoading}
+              />
+              <button
+                type="button"
+                onClick={handleUrlFetch}
+                disabled={isLoading || isUrlLoading || !urlInput.trim()}
+                className="url-fetch-button"
+              >
+                {isUrlLoading ? (
+                  <div className="loading">
+                    <div className="spinner"></div>
+                    Fetching...
+                  </div>
+                ) : (
+                  '🌐 Fetch Text'
+                )}
+              </button>
+            </div>
             <span className="file-upload-text">or paste text below</span>
           </div>
             <textarea
