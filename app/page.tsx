@@ -39,6 +39,12 @@ export default function Home() {
   // URL fetch state
   const [urlInput, setUrlInput] = useState('')
   const [isUrlLoading, setIsUrlLoading] = useState(false)
+  
+  // Edit mode state
+  const [isEditingStylePrompt, setIsEditingStylePrompt] = useState(false)
+  const [isEditingLyrics, setIsEditingLyrics] = useState(false)
+  const [editedStylePrompt, setEditedStylePrompt] = useState('')
+  const [editedLyrics, setEditedLyrics] = useState('')
 
   // Check if API key is available on page load
   useEffect(() => {
@@ -205,6 +211,40 @@ export default function Home() {
     setCurrentVersionIndex(-1)
     setIsRefinementMode(false)
     setRefinementInstructions('')
+    setIsEditingStylePrompt(false)
+    setIsEditingLyrics(false)
+    setEditedStylePrompt('')
+    setEditedLyrics('')
+  }
+
+  const handleEditStylePrompt = () => {
+    setEditedStylePrompt(stylePrompt)
+    setIsEditingStylePrompt(true)
+  }
+
+  const handleSaveStylePrompt = () => {
+    setStylePrompt(editedStylePrompt)
+    setIsEditingStylePrompt(false)
+  }
+
+  const handleCancelEditStylePrompt = () => {
+    setEditedStylePrompt('')
+    setIsEditingStylePrompt(false)
+  }
+
+  const handleEditLyrics = () => {
+    setEditedLyrics(lyrics)
+    setIsEditingLyrics(true)
+  }
+
+  const handleSaveLyrics = () => {
+    setLyrics(editedLyrics)
+    setIsEditingLyrics(false)
+  }
+
+  const handleCancelEditLyrics = () => {
+    setEditedLyrics('')
+    setIsEditingLyrics(false)
   }
 
   return (
@@ -512,20 +552,53 @@ export default function Home() {
               <label htmlFor="stylePromptOutput">
                 Style Prompt (for Suno)
               </label>
-              <button
-                type="button"
-                className="copy-button"
-                onClick={() => navigator.clipboard.writeText(stylePrompt)}
-                disabled={!stylePrompt}
-              >
-                📋 Copy
-              </button>
+              <div className="button-group-inline">
+                {isEditingStylePrompt ? (
+                  <>
+                    <button
+                      type="button"
+                      className="save-button"
+                      onClick={handleSaveStylePrompt}
+                      disabled={!editedStylePrompt.trim()}
+                    >
+                      ✅ Save
+                    </button>
+                    <button
+                      type="button"
+                      className="cancel-button"
+                      onClick={handleCancelEditStylePrompt}
+                    >
+                      ❌ Cancel
+                    </button>
+                  </>
+                ) : (
+                  <>
+                    <button
+                      type="button"
+                      className="edit-button"
+                      onClick={handleEditStylePrompt}
+                      disabled={!stylePrompt}
+                    >
+                      ✏️ Edit
+                    </button>
+                    <button
+                      type="button"
+                      className="copy-button"
+                      onClick={() => navigator.clipboard.writeText(stylePrompt)}
+                      disabled={!stylePrompt}
+                    >
+                      📋 Copy
+                    </button>
+                  </>
+                )}
+              </div>
             </div>
             <textarea
               id="stylePromptOutput"
-              value={stylePrompt}
-              readOnly
-              className="output-area style-output"
+              value={isEditingStylePrompt ? editedStylePrompt : stylePrompt}
+              onChange={isEditingStylePrompt ? (e) => setEditedStylePrompt(e.target.value) : undefined}
+              readOnly={!isEditingStylePrompt}
+              className={`output-area style-output ${isEditingStylePrompt ? 'editing' : ''}`}
               placeholder="Style prompt will appear here..."
             />
           </div>
@@ -535,20 +608,53 @@ export default function Home() {
               <label htmlFor="lyricsOutput">
                 Lyrics (for Suno)
               </label>
-              <button
-                type="button"
-                className="copy-button"
-                onClick={() => navigator.clipboard.writeText(lyrics)}
-                disabled={!lyrics}
-              >
-                📋 Copy
-              </button>
+              <div className="button-group-inline">
+                {isEditingLyrics ? (
+                  <>
+                    <button
+                      type="button"
+                      className="save-button"
+                      onClick={handleSaveLyrics}
+                      disabled={!editedLyrics.trim()}
+                    >
+                      ✅ Save
+                    </button>
+                    <button
+                      type="button"
+                      className="cancel-button"
+                      onClick={handleCancelEditLyrics}
+                    >
+                      ❌ Cancel
+                    </button>
+                  </>
+                ) : (
+                  <>
+                    <button
+                      type="button"
+                      className="edit-button"
+                      onClick={handleEditLyrics}
+                      disabled={!lyrics}
+                    >
+                      ✏️ Edit
+                    </button>
+                    <button
+                      type="button"
+                      className="copy-button"
+                      onClick={() => navigator.clipboard.writeText(lyrics)}
+                      disabled={!lyrics}
+                    >
+                      📋 Copy
+                    </button>
+                  </>
+                )}
+              </div>
             </div>
             <textarea
               id="lyricsOutput"
-              value={lyrics}
-              readOnly
-              className="output-area lyrics-output"
+              value={isEditingLyrics ? editedLyrics : lyrics}
+              onChange={isEditingLyrics ? (e) => setEditedLyrics(e.target.value) : undefined}
+              readOnly={!isEditingLyrics}
+              className={`output-area lyrics-output ${isEditingLyrics ? 'editing' : ''}`}
               placeholder="Lyrics will appear here..."
             />
           </div>
