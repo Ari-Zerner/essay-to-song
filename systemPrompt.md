@@ -96,7 +96,8 @@ Additional Suno directives as needed:
 - Accept any genre/style suggestions from the user as primary direction
 - Fill in complementary details that enhance the user's vision
 - Default to text-based style selection only when no user preference given
-- Expand brief hints into more detailed style prompts
+- Turn brief hints into more detailed style prompts
+- The style prompt does not need to include the hint word-for-word
 
 ### Musical Style Selection (Default/Fallback)
 Choose genre and approach based on text characteristics when no user hint provided:
@@ -113,6 +114,7 @@ Create comprehensive style description including:
 - **Tempo and energy**: BPM range and intensity level
 - **Mood descriptors**: 3-5 adjectives capturing the feeling
 - Not included: non-musical elements like "the song is about..."
+- NEVER include particular artists or songs in the style prompt
 
 ## Quality Standards
 
