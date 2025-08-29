@@ -18,7 +18,7 @@ async function loadSystemPrompt(): Promise<string> {
 
 export async function POST(request: NextRequest) {
   try {
-    const { genreHints, userNotes, essayText, isRefinementMode, refinementInstructions, currentStylePrompt, currentLyrics, apiKey } = await request.json()
+    const { genreHints, userNotes, essayText, isRefinementMode, refinementInstructions, currentStylePrompt, currentLyrics, apiKey, selectedModel } = await request.json()
 
     if (!essayText || typeof essayText !== 'string') {
       return NextResponse.json(
@@ -70,8 +70,12 @@ export async function POST(request: NextRequest) {
 </conversion_request>`
     }
 
+    // Use the selected model ID directly since it comes from the models API
+    // Fallback to Sonnet 4 if no model selected
+    const modelId = selectedModel || 'claude-sonnet-4-20250514'
+
     const message = await anthropic.messages.create({
-      model: 'claude-sonnet-4-20250514',
+      model: modelId,
       max_tokens: 4000,
       system: systemPrompt,
       messages: [

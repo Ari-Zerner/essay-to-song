@@ -401,6 +401,135 @@ body {
   box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
 }
 
+/* Model Selection Styles */
+.model-toggle-label {
+  display: block;
+  margin-bottom: 0.5rem;
+  font-weight: 600;
+  color: #374151;
+  font-size: 1rem;
+}
+
+.model-toggle-container {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.model-toggle {
+  display: flex;
+  gap: 0.5rem;
+  width: 100%;
+}
+
+.model-option {
+  flex: 1;
+  padding: 1rem;
+  border: 2px solid #e5e7eb;
+  border-radius: 8px;
+  background: white;
+  color: #6b7280;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  font-size: 0.9rem;
+  min-height: 80px;
+}
+
+.model-option:hover:not(:disabled) {
+  border-color: #667eea;
+  color: #667eea;
+  transform: translateY(-1px);
+  box-shadow: 0 2px 8px rgba(102, 126, 234, 0.1);
+}
+
+.model-option.active {
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  color: white;
+  border-color: #667eea;
+  box-shadow: 0 4px 12px rgba(102, 126, 234, 0.2);
+}
+
+.model-option:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+  transform: none;
+}
+
+.model-option-content {
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+  text-align: left;
+}
+
+.model-name {
+  font-weight: 500;
+  font-size: 0.9rem;
+}
+
+.model-pricing {
+  font-size: 0.75rem;
+  opacity: 0.8;
+  font-weight: 400;
+}
+
+.model-description {
+  text-align: center;
+  margin-top: 0.25rem;
+}
+
+.model-description small {
+  color: #6b7280;
+  font-style: italic;
+}
+
+.loading-models {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  padding: 1rem;
+  color: #6b7280;
+  font-size: 0.9rem;
+}
+
+/* Advanced Options Styles */
+.advanced-toggle {
+  background: rgba(102, 126, 234, 0.1);
+  color: #667eea;
+  border: 1px solid rgba(102, 126, 234, 0.2);
+  padding: 0.75rem 1rem;
+  border-radius: 8px;
+  font-size: 0.9rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  width: 100%;
+  text-align: left;
+}
+
+.advanced-toggle:hover {
+  background: rgba(102, 126, 234, 0.15);
+  border-color: rgba(102, 126, 234, 0.3);
+}
+
+.advanced-options {
+  margin-top: 1rem;
+  padding: 1.5rem;
+  background: #f8fafc;
+  border-radius: 8px;
+  border: 1px solid #e2e8f0;
+}
+
+.advanced-option {
+  margin-bottom: 1rem;
+}
+
+.advanced-option:last-child {
+  margin-bottom: 0;
+}
+
 /* Refinement Mode Styles */
 .mode-toggle {
   display: flex;
@@ -640,6 +769,20 @@ body {
   
   .mode-toggle {
     flex-direction: column;
+  }
+  
+  .model-toggle {
+    flex-direction: column;
+    gap: 0.75rem;
+  }
+  
+  .model-option {
+    min-height: 70px;
+    padding: 0.75rem;
+  }
+  
+  .advanced-options {
+    padding: 1rem;
   }
   
   .button-group {

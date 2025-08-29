@@ -14,6 +14,16 @@ interface Version {
   timestamp: Date
 }
 
+interface Model {
+  id: string
+  display_name: string
+  description: string
+  pricing?: {
+    input: number
+    output: number
+  }
+}
+
 export default function Home() {
   const [genreHints, setGenreHints] = useState('')
   const [userNotes, setUserNotes] = useState('')
@@ -36,6 +46,9 @@ export default function Home() {
   // Instructions visibility state
   const [showInstructions, setShowInstructions] = useState(false)
   
+  // Advanced options visibility state
+  const [showAdvanced, setShowAdvanced] = useState(false)
+  
   // URL fetch state
   const [urlInput, setUrlInput] = useState('')
   const [isUrlLoading, setIsUrlLoading] = useState(false)
@@ -45,6 +58,11 @@ export default function Home() {
   const [isEditingLyrics, setIsEditingLyrics] = useState(false)
   const [editedStylePrompt, setEditedStylePrompt] = useState('')
   const [editedLyrics, setEditedLyrics] = useState('')
+  
+  // Model selection state
+  const [selectedModel, setSelectedModel] = useState<string>('claude-sonnet-4-20250514')
+  const [availableModels, setAvailableModels] = useState<Model[]>([])
+  const [isLoadingModels, setIsLoadingModels] = useState(true)
 
   // Check if API key is available on page load
   useEffect(() => {
@@ -60,6 +78,44 @@ export default function Home() {
     }
     
     checkApiKey()
+  }, [])
+
+  // Fetch available models on page load
+  useEffect(() => {
+    const fetchModels = async () => {
+      try {
+        const response = await fetch('/api/models')
+        const data = await response.json()
+        setAvailableModels(data.data || [])
+        
+        // Set default model to the first available Sonnet model
+        const sonnetModel = data.data?.find((model: Model) => model.id.includes('sonnet'))
+        if (sonnetModel) {
+          setSelectedModel(sonnetModel.id)
+        }
+      } catch (error) {
+        console.error('Failed to fetch models:', error)
+        // Fallback to hardcoded models
+        setAvailableModels([
+          {
+            id: 'claude-sonnet-4-20250514',
+            display_name: 'Claude Sonnet 4',
+            description: 'Fast and efficient - great for most conversions',
+            pricing: { input: 3, output: 15 }
+          },
+          {
+            id: 'claude-opus-4-20250319',
+            display_name: 'Claude Opus 4.1',
+            description: 'Most capable - best for complex or creative content',
+            pricing: { input: 15, output: 75 }
+          }
+        ])
+      } finally {
+        setIsLoadingModels(false)
+      }
+    }
+
+    fetchModels()
   }, [])
 
   const handleFileUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -153,6 +209,7 @@ export default function Home() {
           currentStylePrompt: isRefinementMode ? stylePrompt : '',
           currentLyrics: isRefinementMode ? lyrics : '',
           apiKey: apiKey.trim() || undefined,
+          selectedModel,
         }),
       })
 
@@ -485,6 +542,68 @@ export default function Home() {
             />
           </div>
         )}
+
+        {/* Advanced Options */}
+        <div className="form-group">
+          <button
+            type="button"
+            className="advanced-toggle"
+            onClick={() => setShowAdvanced(!showAdvanced)}
+          >
+            {showAdvanced ? '🔽' : '▶️'} Advanced Options
+          </button>
+          
+          {showAdvanced && (
+            <div className="advanced-options">
+              {/* Model Selection Toggle */}
+              <div className="advanced-option">
+                <label className="model-toggle-label">
+                  AI Model
+                </label>
+                <div className="model-toggle-container">
+                  {isLoadingModels ? (
+                    <div className="loading-models">
+                      <div className="spinner"></div>
+                      Loading available models...
+                    </div>
+                  ) : (
+                    <>
+                      <div className="model-toggle">
+                        {availableModels.map((model) => (
+                          <button
+                            key={model.id}
+                            type="button"
+                            className={`model-option ${selectedModel === model.id ? 'active' : ''}`}
+                            onClick={() => setSelectedModel(model.id)}
+                            disabled={isLoading}
+                          >
+                            <div className="model-option-content">
+                              <div className="model-name">
+                                {model.id.includes('sonnet') ? '🚀' : 
+                                 model.id.includes('opus') ? '🎯' : 
+                                 model.id.includes('haiku') ? '⚡' : '🤖'} {model.display_name}
+                              </div>
+                              {model.pricing && (
+                                <div className="model-pricing">
+                                  ${model.pricing.input}/MTok in • ${model.pricing.output}/MTok out
+                                </div>
+                              )}
+                            </div>
+                          </button>
+                        ))}
+                      </div>
+                      <div className="model-description">
+                        {availableModels.find(m => m.id === selectedModel)?.description && (
+                          <small>{availableModels.find(m => m.id === selectedModel)?.description}</small>
+                        )}
+                      </div>
+                    </>
+                  )}
+                </div>
+              </div>
+            </div>
+          )}
+        </div>
 
         <div className="button-group">
           <button
